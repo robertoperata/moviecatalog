@@ -10,6 +10,7 @@ public class DirectorMapper implements EntityMapper<Director, DirectorDTO> {
     @Override
     public Director toEntity(DirectorDTO directorDTO) {
         Director director = new Director();
+        director.setId(directorDTO.getId());
         director.setFirstName(directorDTO.getFirstName());
         director.setLastName(directorDTO.getLastName());
         return director;
@@ -18,6 +19,7 @@ public class DirectorMapper implements EntityMapper<Director, DirectorDTO> {
     @Override
     public DirectorDTO toDto(Director director) {
         DirectorDTO directorDTO = new DirectorDTO();
+        directorDTO.setId(director.getId());
         directorDTO.setFirstName(director.getFirstName());
         directorDTO.setLastName(director.getLastName());
         return directorDTO;

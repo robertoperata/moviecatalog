@@ -10,6 +10,7 @@ public class RatingMapper implements EntityMapper<Rating, RatingDTO> {
     @Override
     public Rating toEntity(RatingDTO ratingDTO) {
         Rating rating = new Rating();
+        rating.setId(ratingDTO.getId());
         rating.setRating(ratingDTO.getRating());
         rating.setComment(ratingDTO.getComment());
         return rating;
@@ -18,6 +19,7 @@ public class RatingMapper implements EntityMapper<Rating, RatingDTO> {
     @Override
     public RatingDTO toDto(Rating rating) {
         RatingDTO ratingDTO = new RatingDTO();
+        ratingDTO.setId(rating.getId());
         ratingDTO.setComment(rating.getComment());
         ratingDTO.setRating(rating.getRating());
         return ratingDTO;

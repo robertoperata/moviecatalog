@@ -73,4 +73,14 @@ public class Movie {
 
         this.directors = directors;
     }
+
+    public void addDirector(Director director) {
+        this.getDirectors().add(director);
+        director.getMovies().add(this);
+    }
+
+    public void removeDirector(Director director) {
+        this.getDirectors().remove(director);
+        director.getMovies().remove(this);
+    }
 }

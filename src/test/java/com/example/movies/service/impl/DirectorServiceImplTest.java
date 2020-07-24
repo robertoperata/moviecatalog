@@ -82,6 +82,6 @@ class DirectorServiceImplTest {
         Director director = new Director();
         director.setFirstName("name");
         directorService.deleteById(director.getId());
-        verify(directorRepository, times(1)).delete(director);
+        verify(directorRepository, times(1)).deleteById(director.getId());
     }
 }

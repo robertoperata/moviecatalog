@@ -33,15 +33,13 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final DirectorService directorService;
     private final MovieMapper movieMapper;
-    private final DirectorMapper directorMapper;
     private final RatingService ratingService;
 
-    public MovieServiceImpl(MovieRepository movieRepository, DirectorService directorService, MovieMapper movieMapper, DirectorMapper directorMapper,
+    public MovieServiceImpl(MovieRepository movieRepository, DirectorService directorService, MovieMapper movieMapper,
         RatingService ratingService) {
         this.movieRepository = movieRepository;
         this.directorService = directorService;
         this.movieMapper = movieMapper;
-        this.directorMapper = directorMapper;
         this.ratingService = ratingService;
     }
 
@@ -56,7 +54,11 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = movieMapper.toEntity(movieDTO);
         if(!CollectionUtils.isEmpty(movieDTO.getDirectorsIds())) {
             Collection<Director> directors = directorService.findAllByIdIn(movieDTO.getDirectorsIds());
-            movie.setDirectors(new HashSet<>(directors));
+            if(!CollectionUtils.isEmpty(directors)) {
+                for(Director director:directors) {
+                    movie.addDirector(director);
+                }
+            }
         }
         return movieMapper.toDto(movieRepository.save(movie));
     }
