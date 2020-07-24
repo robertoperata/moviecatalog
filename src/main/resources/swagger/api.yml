@@ -1,0 +1,297 @@
+openapi: 3.0.0
+info:
+  description: Movie catalog interview project
+  version: "1.0.0"
+  title: Movies catalog
+  contact:
+    email: roberto.perata72@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/robertoperata/movies/1.0.0
+  - url: 'https://petstore.swagger.io/v2'
+tags:
+  - name: movie
+    description: Operations about movies
+  - name: director
+    description: Operations about director
+  - name: rating
+    description: Operations about rating
+paths:
+  /movie:
+    post:
+      tags:
+        - movie
+      summary: Add a new movie to the catalog
+      operationId: addMovie
+      responses:
+        '405':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Movie'
+    put:
+      tags:
+        - movie
+      summary: Update an existing movie
+      operationId: updateMovie
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Movie not found
+        '405':
+          description: Validation exception
+      requestBody:
+        $ref: '#/components/requestBodies/Movie'
+  /movie/findByRating:
+    get:
+      tags:
+        - movie
+      summary: Finds Pets by rating
+      description: Retrieve movies by rating
+      operationId: findMovieByRating
+      parameters:
+        - name: rating
+          in: query
+          description: Rating values that need to be considered for filter
+          required: true
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid rating value
+  /movie/findByDirector:
+    get:
+      tags:
+        - movie
+      summary: Finds movies by director
+      description: Retrieves movies from director
+      operationId: findMoviesByDirector
+      parameters:
+        - name: director
+          in: query
+          description: Director value that need to be consider for filter
+          required: true
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid director value
+  '/movie/{movieId}':
+    get:
+      tags:
+        - movie
+      summary: Find movie by ID
+      description: Returns a single movie
+      operationId: getMovieById
+      parameters:
+        - name: movieId
+          in: path
+          description: ID of movie to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Movie not found
+    post:
+      tags:
+        - movie
+      summary: Updates a movie in the catalog
+      operationId: updateMovieWithForm
+      parameters:
+        - name: movieId
+          in: path
+          description: ID of movie that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '405':
+          description: Invalid input
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  description: Updated name of the movie
+                  type: string
+                status:
+                  description: Updated rating of the movie
+                  type: string
+    delete:
+      tags:
+        - movie
+      summary: Deletes a movie
+      operationId: deleteMovie
+      parameters:
+        - name: movieId
+          in: path
+          description: Movie id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Movie not found
+  /director:
+    post:
+      tags:
+        - director
+      summary: Create a director
+      description: Create a director
+      operationId: createDirector
+      responses:
+        default:
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Director'
+        description: Created director object
+        required: true
+  '/director/{directorId}':
+    get:
+      tags:
+        - director
+      summary: Find director by ID
+      description: Return a single director
+      parameters:
+        - name: directorId
+          in: path
+          description: Id of the director
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successeful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Director'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Director not found
+    post:
+      tags:
+        - director
+      summary: Update a director
+      description: update a director
+      parameters:
+        - name: directorId
+          in: path
+          description: ID of the director
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        default:
+          description: successful operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Director'
+        description: Update director object
+        required: true
+    delete:
+      tags:
+        - director
+      summary: Deletes a director
+      description: Delete a director
+      operationId: deleteDirector
+      parameters:
+        - name: directorId
+          in: path
+          description: Director id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Director not found
+components:
+  schemas:
+    Movie:
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          type: integer
+          format: int8
+        name:
+          type: string
+          example: Quantin Taranitino
+        rating:
+          type: integer
+          format: int64
+          description: movie rating 1 to 5
+    Director:
+      type: object
+      required:
+        - firstName
+        - lastName
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  requestBodies:
+    Movie:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Movie'
+      description: Movie object that needs to be added to the catalog
+      required: true
